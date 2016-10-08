@@ -21,6 +21,7 @@
 
         vm.acceptProposal = function () {
             gameFactory.addToHistory(gameFactory.getActiveGame());
+            vm.game.date = new Date().toLocaleString();
             gameFactory.setActiveGame(vm.game);
             refresh();
         };

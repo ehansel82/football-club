@@ -49,6 +49,7 @@
 
         gameFactory.initGame = function () {
             return {
+                date: '',
                 qb: null,
                 team1: [],
                 team2: []
