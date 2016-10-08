@@ -18,7 +18,19 @@
     font-weight: bold;
 }
 
+#activeGamePanel{
+    padding-top: 30px;
+}
+
 .qbBtn {
     width: 50px;
     margin-right: 20px;
+}
+
+#acceptButton {
+    margin-right: 20px;
+}
+
+#newGameContainer {
+    margin-bottom: 30px;
 }

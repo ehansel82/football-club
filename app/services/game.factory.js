@@ -5,6 +5,7 @@
     function gameFactory(localStorageService, playerFactory) {
 
         var gamesHistoryKey = 'gamesHistory';
+        var activeGameKey = 'activeGame';
         var gameFactory = {};
 
         gameFactory.newGame = function () {
@@ -27,9 +28,19 @@
         };
 
         gameFactory.addToHistory = function (game) {
-            var gamesList = gameFactory.getAllHistory();
-            gamesList.splice(0, 0, game);
-            localStorageService.set(gamesHistoryKey, gamesList);
+            if (game) {
+                var gamesList = gameFactory.getAllHistory();
+                gamesList.splice(0, 0, game);
+                localStorageService.set(gamesHistoryKey, gamesList);
+            }
+        };
+
+        gameFactory.getActiveGame = function () {
+            return localStorageService.get(activeGameKey);
+        };
+
+        gameFactory.setActiveGame = function (game) {
+            return localStorageService.set(activeGameKey, game);
         };
 
         gameFactory.getAllHistory = function () {

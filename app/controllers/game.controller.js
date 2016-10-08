@@ -6,15 +6,32 @@
 
         var vm = this;
 
+        refresh();
+
         vm.newGame = function () {
-            if (vm.game){
-                gameFactory.addToHistory(vm.game);
-            }
             vm.game = gameFactory.newGame();
+            vm.proposal = true;
+        };
+
+        vm.completeGame = function() {
+            gameFactory.addToHistory(gameFactory.getActiveGame());
+            gameFactory.setActiveGame(null);
             refresh();
         };
 
-        refresh = function() {
+        vm.acceptProposal = function () {
+            gameFactory.addToHistory(gameFactory.getActiveGame());
+            gameFactory.setActiveGame(vm.game);
+            refresh();
+        };
+
+        vm.cancelProposal = function () {
+            refresh();
+        };
+
+        function refresh() {
+            vm.proposal = false;
+            vm.game = gameFactory.getActiveGame();
             vm.history = gameFactory.getAllHistory();
         }
     }
