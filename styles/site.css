@@ -20,6 +20,7 @@
 
 #activeGamePanel{
     padding-top: 30px;
+    margin-bottom: 50px;
 }
 
 .qbBtn {
@@ -35,6 +36,19 @@
     margin-bottom: 30px;
 }
 
-.qbHistory{
-    margin-bottom: 10px;
+.qbHistory, .dateHistory{
+    margin-bottom: 15px;
+}
+
+.lightBlue{
+    color:#5bc0de;
+    font-weight: bold;
+}
+
+.players{
+    text-transform: capitalize;
+}
+
+#historyHeader{
+    font-size: larger;
 }

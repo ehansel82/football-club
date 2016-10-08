@@ -1,4 +1,5 @@
 (function () {
+
     angular.module('footballClub')
         .factory('gameFactory', ['localStorageService', 'playerFactory', gameFactory]);
 
@@ -47,6 +48,10 @@
             return localStorageService.get(gamesHistoryKey) || [];
         };
 
+        gameFactory.clearHistory = function () {
+            return localStorageService.set(gamesHistoryKey, null);
+        };
+
         gameFactory.initGame = function () {
             return {
                 date: '',
@@ -54,7 +59,7 @@
                 team1: [],
                 team2: []
             }
-        }
+        };
 
         return gameFactory;
     }

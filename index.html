@@ -11,6 +11,10 @@
     <link rel="stylesheet" type="text/css" href="styles/bootstrap-theme.min.css" />
     <link rel="stylesheet" type="text/css" href="styles/animate.css" />
     <link rel="stylesheet" type="text/css" href="styles/site.css" />
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/knuth-shuffle/index.js"></script>
     <script src="node_modules/angular/angular.min.js"></script>
@@ -46,7 +50,7 @@
             <div class="panel-body">
                 <ul class="list-group" ng-repeat="player in vm.players track by $index">
                     <li class="list-group-item clearfix">
-                        <span class="listPlayerName">{{player.name}}</span>
+                        <span class="listPlayerName players">{{player.name}}</span>
                         <span class="pull-right">
                             <button ng-click="vm.toggleQB($index)" class="qbBtn btn btn-xs" ng-class="{'btn-default': !player.isQB,
                                                                                                        'btn-info': player.isQB }">QB</button>
@@ -79,41 +83,42 @@
                         </div>
                         <h4><strong>Team 1</strong></h4>
                         <ul class="list-group" " ng-repeat="player in vm.game.team1 ">
-                            <li class="list-group-item ">{{player.name}}</li>
+                            <li class="list-group-item players">{{player.name}}</li>
                         </ul>
                         <h4><strong>Team 2</strong></h4>
                         <ul class="list-group " ng-repeat="player in vm.game.team2 ">
-                            <li class="list-group-item ">{{player.name}}</li>
+                            <li class="list-group-item players">{{player.name}}</li>
                         </ul>
                     </div>
                     <div ng-show="vm.proposal ">
                         <span class="pull-right ">
-                            <button id="acceptButton " class="btn btn-success " ng-click="vm.acceptProposal() ">Accept?</button>
+                            <button id="acceptButton" class="btn btn-success " ng-click="vm.acceptProposal() ">Accept?</button>
                             <button class="btn btn-warning " ng-click="vm.cancelProposal() ">Cancel</button>
                         </span>
                     </div>
                     <div ng-show="!vm.proposal && vm.game ">
-                        <button class="btn btn-default pull-right " ng-click="vm.completeGame() ">Complete Game</button>
+                        <button class="btn btn-default pull-right" ng-click="vm.completeGame() ">Complete Game</button>
                     </div>
                 </div>
             </div>
 
             <div class="panel panel-default ">
-                <div class="panel-heading">
-                    <span>Game History</span>
+                <div class="panel-heading clearfix">
+                    <span id="historyHeader">Game History</span><span><button class="btn btn-danger btn-xs pull-right" ng-click="vm.clearHistory()">Clear History</button></span>
                 </div>
                 <div class="panel-body ">
                     <ul class="list-group ">
                         <li class="list-group-item clearfix " ng-repeat="game in vm.history track by $index ">
-                            <div>Date: <strong>{{game.date}}</strong><div>
-                            <div class="qbHistory" ng-show="game.qb">Quarterback: <strong>{{game.qb.name}}</strong></div>
-                            <span ng-repeat="player in game.team1 track by $index "><strong>{{player.name}}</strong> </span>
-                            <div>vs.</div>
-                            <span ng-repeat="player in game.team2 track by $index "><strong>{{player.name}}</strong> </span>
+                            <div class="dateHistory"><strong>Date:</strong> <span class="lightBlue">{{game.date}}</span></div>
+                            <div class="qbHistory" ng-show="game.qb"><strong>Quarterback:</strong> <span class="lightBlue">{{game.qb.name}}</span></div>
+                            <span class="players lightBlue" ng-repeat="player in game.team1 track by $index ">{{player.name}} </span>
+                            <div><strong>vs.</strong></div>
+                            <span class="players lightBlue" ng-repeat="player in game.team2 track by $index ">{{player.name}} </span>
                         </li>
                     </ul>
                 </div>
             </div>
+        </div>
     </div>
 </body>
 

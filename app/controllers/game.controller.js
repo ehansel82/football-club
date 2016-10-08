@@ -30,6 +30,11 @@
             refresh();
         };
 
+        vm.clearHistory = function(){
+            gameFactory.clearHistory();
+            refresh();
+        };
+
         function refresh() {
             vm.proposal = false;
             vm.game = gameFactory.getActiveGame();
