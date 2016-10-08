@@ -4,7 +4,7 @@
 
     function gameFactory(localStorageService, playerFactory) {
 
-        var gamesKey = 'games';
+        var gamesHistoryKey = 'gamesHistory';
         var gameFactory = {};
 
         gameFactory.newGame = function () {
@@ -19,14 +19,21 @@
                     break;
                 }
             }
-
-
-
             var shuffledPlayers = window.knuthShuffle(players);
             var half_length = Math.ceil(shuffledPlayers.length / 2);
             game.team1 = shuffledPlayers.splice(0, half_length);
             game.team2 = shuffledPlayers;
             return game;
+        };
+
+        gameFactory.addToHistory = function (game) {
+            var gamesList = gameFactory.getAllHistory();
+            gamesList.splice(0, 0, game);
+            localStorageService.set(gamesHistoryKey, gamesList);
+        };
+
+        gameFactory.getAllHistory = function () {
+            return localStorageService.get(gamesHistoryKey) || [];
         };
 
         gameFactory.initGame = function () {

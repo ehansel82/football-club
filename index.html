@@ -19,43 +19,67 @@
     <script src="app/app.module.js"></script>
     <script src="app/controllers/players.controller.js"></script>
     <script src="app/controllers/game.controller.js"></script>
+    <script src="app/controllers/main.controller.js"></script>
     <script src="app/services/player.factory.js"></script>
     <script src="app/services/game.factory.js"></script>
 </head>
 
 <body ng-app="footballClub">
-    <h1>Football Club App</h1>
+    <div class="well" ng-controller="mainController as main">
 
-    <div class="panel panel-default" ng-controller="playersController as vm" ng-init="vm.refresh()">
-        <div class="panel-body">
-            <ul class="list-group" ng-repeat="player in vm.players track by $index">
-                <li class="list-group-item clearfix">{{player.name}}
-                    <button ng-click="vm.toggleQB($index)" class="btn btn-info btn-xs" ng-class="{red: player.isQB}">QB</button>
-                    <span class="pull-right">
-                         <button ng-click="vm.deletePlayer($index)" class="btn btn-danger btn-xs">Delete</button></li>
-                    </span>
-            </ul>
-        </div>
-        <div class="panel-body">
-            <input class="input" ng-model="vm.playerToAdd.name" type="text" />
-            <button class="btn btn-success" ng-click="vm.addPlayer()">Add</button>
-        </div>
-    </div>
+        <h1>Football Club App</h1>
+        <ul class="nav nav-tabs">
+            <li role="presentation" ng-click="main.playersClick()" ng-class="{active: main.playersSelected}"><a href="#">Players</a></li>
+            <li role="presentation" ng-click="main.gamesClick()" ng-class="{active: !main.playersSelected}"><a href="#">Games</a></li>
+        </ul>
 
-    <div class="panel panel-default" ng-controller="gameController as vm">
-        <div class="panel-body">
-            <div ng-show="vm.game.qb">
-                <span>All Time QB: </span><span>{{vm.game.qb.name}}</span>
+        <div class="panel panel-default" ng-show="main.playersSelected" ng-controller="playersController as vm" ng-init="vm.refresh()">
+            <div class="panel-body">
+                <ul class="list-group" ng-repeat="player in vm.players track by $index">
+                    <li class="list-group-item clearfix">{{player.name}}
+                        <button ng-click="vm.toggleQB($index)" class="btn btn-info btn-xs" ng-class="{red: player.isQB}">QB</button>
+                        <span class="pull-right">
+                            <button ng-click="vm.deletePlayer($index)" class="btn btn-danger btn-xs">Delete</button>
+                        </span>
+                    </li>
+                </ul>
             </div>
-            <h2>Team 1</h2>
-            <ul ng-repeat="player in vm.game.team1 track by $index">
-                <li>{{player.name}}</li>
-            </ul>
-            <h2>Team 2</h2>
-            <ul ng-repeat="player in vm.game.team2 track by $index">
-                <li>{{player.name}}</li>
-            </ul>
-            <button class="btn btn-primary" ng-click="vm.newGame()">New Game</button>
+            <div class="panel-body">
+                <input class="input" ng-model="vm.playerToAdd.name" type="text" />
+                <button class="btn btn-success" ng-click="vm.addPlayer()">Add</button>
+            </div>
+        </div>
+
+        <div class="panel panel-default" ng-show="!main.playersSelected" ng-controller="gameController as vm">
+            <div class="panel-body">
+                <div ng-show="vm.game.qb">
+                    <span>All Time QB: </span><span>{{vm.game.qb.name}}</span>
+                </div>
+                <h2>Team 1</h2>
+                <ul ng-repeat="player in vm.game.team1 track by $index">
+                    <li>{{player.name}}</li>
+                </ul>
+                <h2>Team 2</h2>
+                <ul ng-repeat="player in vm.game.team2 track by $index">
+                    <li>{{player.name}}</li>
+                </ul>
+                <button class="btn btn-primary" ng-click="vm.newGame()">New Game</button>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-header">
+                    <span>Game History</span>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <li class="list-group-item clearfix"  ng-repeat="game in vm.history track by $index">
+                            <div>All Time QB: {{game.qb.name}}</div>
+                            <span ng-repeat="player in game.team1 track by $index">{{player.name}} </span>
+                            <div>vs.</div>
+                            <span ng-repeat="player in game.team2 track by $index">{{player.name}} </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </body>

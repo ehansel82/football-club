@@ -1,17 +1,21 @@
 (function () {
     angular.module('footballClub')
-        .controller('gameController', ['$scope', 'gameFactory', gameController]);
+        .controller('gameController', ['gameFactory', gameController]);
 
-    function gameController($scope, gameFactory) {
+    function gameController(gameFactory) {
 
         var vm = this;
 
-        vm.game = gameFactory.initGame();
-
         vm.newGame = function () {
+            if (vm.game){
+                gameFactory.addToHistory(vm.game);
+            }
             vm.game = gameFactory.newGame();
-            $scope.apply();
+            refresh();
         };
 
+        refresh = function() {
+            vm.history = gameFactory.getAllHistory();
+        }
     }
 })();
