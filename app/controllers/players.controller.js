@@ -5,10 +5,12 @@
     function playersController($scope, playerFactory) {
 
         var vm = this;
-        
+
         vm.addPlayer = function () {
-            playerFactory.add(vm.playerToAdd);
-            vm.refresh();
+            if (vm.playerToAdd.name) {
+                playerFactory.add(vm.playerToAdd);
+                vm.refresh();
+            }
         }
 
         vm.deletePlayer = function (idx) {
@@ -21,7 +23,7 @@
             vm.refresh();
         }
 
-        vm.refresh = function() {
+        vm.refresh = function () {
             vm.players = playerFactory.getAll();
             vm.playerToAdd = playerFactory.newPlayer('');
         }
