@@ -1,0 +1,20 @@
+{
+  "name": "football-club",
+  "version": "1.0.0",
+  "description": "Football club app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "lite-server"
+  },
+  "author": "Eric Hansel",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-animate": "^1.5.8",
+    "angular-local-storage": "^0.5.0",
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.1.1",
+    "knuth-shuffle": "^1.0.1"
+  }
+}
