@@ -1,10 +1,12 @@
 (function () {
+
     angular.module('footballClub')
         .factory('gameFactory', ['localStorageService', 'playerFactory', gameFactory]);
 
     function gameFactory(localStorageService, playerFactory) {
 
-        var gamesKey = 'games';
+        var gamesHistoryKey = 'gamesHistory';
+        var activeGameKey = 'activeGame';
         var gameFactory = {};
 
         gameFactory.newGame = function () {
@@ -19,9 +21,6 @@
                     break;
                 }
             }
-
-
-
             var shuffledPlayers = window.knuthShuffle(players);
             var half_length = Math.ceil(shuffledPlayers.length / 2);
             game.team1 = shuffledPlayers.splice(0, half_length);
@@ -29,13 +28,38 @@
             return game;
         };
 
+        gameFactory.addToHistory = function (game) {
+            if (game) {
+                var gamesList = gameFactory.getAllHistory();
+                gamesList.splice(0, 0, game);
+                localStorageService.set(gamesHistoryKey, gamesList);
+            }
+        };
+
+        gameFactory.getActiveGame = function () {
+            return localStorageService.get(activeGameKey);
+        };
+
+        gameFactory.setActiveGame = function (game) {
+            return localStorageService.set(activeGameKey, game);
+        };
+
+        gameFactory.getAllHistory = function () {
+            return localStorageService.get(gamesHistoryKey) || [];
+        };
+
+        gameFactory.clearHistory = function () {
+            return localStorageService.set(gamesHistoryKey, null);
+        };
+
         gameFactory.initGame = function () {
             return {
+                date: '',
                 qb: null,
                 team1: [],
                 team2: []
             }
-        }
+        };
 
         return gameFactory;
     }

@@ -1,17 +1,44 @@
 (function () {
     angular.module('footballClub')
-        .controller('gameController', ['$scope', 'gameFactory', gameController]);
+        .controller('gameController', ['gameFactory', gameController]);
 
-    function gameController($scope, gameFactory) {
+    function gameController(gameFactory) {
 
         var vm = this;
 
-        vm.game = gameFactory.initGame();
+        refresh();
 
         vm.newGame = function () {
             vm.game = gameFactory.newGame();
-            $scope.apply();
+            vm.proposal = true;
         };
 
+        vm.completeGame = function() {
+            gameFactory.addToHistory(gameFactory.getActiveGame());
+            gameFactory.setActiveGame(null);
+            refresh();
+        };
+
+        vm.acceptProposal = function () {
+            gameFactory.addToHistory(gameFactory.getActiveGame());
+            vm.game.date = new Date().toLocaleString();
+            gameFactory.setActiveGame(vm.game);
+            refresh();
+        };
+
+        vm.cancelProposal = function () {
+            refresh();
+        };
+
+        vm.clearHistory = function(){
+            gameFactory.clearHistory();
+            refresh();
+        };
+
+        function refresh() {
+            vm.proposal = false;
+            vm.game = gameFactory.getActiveGame();
+            vm.history = gameFactory.getAllHistory();
+        }
     }
 })();

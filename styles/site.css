@@ -1,3 +1,54 @@
 .red {
     color: red !important;
 }
+
+.ng-enter {
+    animation:0.5s fadeIn ease; 
+}
+
+#title{
+    margin-bottom: 35px;
+}
+
+#nameInput{
+    margin-bottom: 10px;
+}
+
+.listPlayerName{
+    font-weight: bold;
+}
+
+#activeGamePanel{
+    padding-top: 30px;
+    margin-bottom: 50px;
+}
+
+.qbBtn {
+    width: 50px;
+    margin-right: 20px;
+}
+
+#acceptButton {
+    margin-right: 20px;
+}
+
+#newGameContainer {
+    margin-bottom: 30px;
+}
+
+.qbHistory, .dateHistory{
+    margin-bottom: 15px;
+}
+
+.lightBlue{
+    color:#5bc0de;
+    font-weight: bold;
+}
+
+.players{
+    text-transform: capitalize;
+}
+
+#historyHeader{
+    font-size: larger;
+}
