@@ -42,8 +42,8 @@
             </div>
         </div>
         <ul class="nav nav-tabs">
-            <li role="presentation" ng-click="main.playersClick()" ng-class="{active: main.playersSelected}"><a href="#">Players</a></li>
-            <li role="presentation" ng-click="main.gamesClick()" ng-class="{active: !main.playersSelected}"><a href="#">Games</a></li>
+            <li role="presentation" ng-class="{active: main.playersSelected}"><a ng-click="main.playersClick()" href="#">Players</a></li>
+            <li role="presentation" ng-class="{active: !main.playersSelected}"><a ng-click="main.gamesClick()" href="#">Games</a></li>
         </ul>
 
         <div class="panel panel-default" ng-show="main.playersSelected" ng-controller="playersController as vm" ng-init="vm.refresh()">
