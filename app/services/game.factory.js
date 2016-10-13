@@ -60,10 +60,7 @@
                 team1: [],
                 team2: [],
                 team1Score: null,
-                team2Score: null,
-                winner: function(){
-                    return (team1Score > team2Score) ? 1 : (team2Score > team1Score) ? 2 : 0;
-                }
+                team2Score: null
             }
         };
 

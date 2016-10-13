@@ -120,9 +120,9 @@
                         <li class="list-group-item clearfix" ng-repeat="game in vm.history track by $index">
                             <div class="dateHistory"><strong>Date:</strong> <span class="lightBlue">{{game.date}}</span></div>
                             <div class="qbHistory" ng-show="game.qb"><strong>Quarterback:</strong> <span class="lightBlue">{{game.qb.name}}</span></div>
-                            <span class="players lightBlue" ng-repeat="player in game.team1 track by $index">{{player.name}} </span>
+                            <span ng-show="game.team1Score > game.team2Score">*</span><span class="players lightBlue" ng-repeat="player in game.team1 track by $index">{{player.name}} </span>
                             <div><strong>vs.</strong></div>
-                            <span class="players lightBlue" ng-repeat="player in game.team2 track by $index">{{player.name}} </span>
+                            <span ng-show="game.team2Score > game.team1Score">*TEST</span><span class="players lightBlue" ng-repeat="player in game.team2 track by $index">{{player.name}} </span>
                             <div>
                                 <span>Score: </span><span>Read Team {{game.team1Score}} - Blue Team {{game.team2Score}}</span>
                             </div>
