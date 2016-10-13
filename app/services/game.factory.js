@@ -26,8 +26,6 @@
             game.team1 = shuffledPlayers.splice(0, half_length);
             game.team2 = shuffledPlayers;
 
-            game.team1Score = 0;
-            game.team2Score = 0;
             return game;
         };
 
@@ -41,12 +39,6 @@
 
         gameFactory.getActiveGame = function () {
             return localStorageService.get(activeGameKey);
-        };
-
-        gameFactory.setActiveScore = function(team1Score, team2Score) {
-            var game = gameFactory.getActiveGame();
-            game.team1Score = team1Score;
-            game.team2Score = team2Score;
         };
 
         gameFactory.setActiveGame = function (game) {
@@ -66,7 +58,12 @@
                 date: '',
                 qb: null,
                 team1: [],
-                team2: []
+                team2: [],
+                team1Score: null,
+                team2Score: null,
+                winner: function(){
+                    return (team1Score > team2Score) ? 1 : (team2Score > team1Score) ? 2 : 0;
+                }
             }
         };
 

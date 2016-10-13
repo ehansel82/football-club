@@ -13,6 +13,10 @@
             vm.proposal = true;
         };
 
+        vm.saveGame = function(){
+            gameFactory.setActiveGame(vm.game);
+        };
+
         vm.completeGame = function () {
             gameFactory.addToHistory(gameFactory.getActiveGame());
             gameFactory.setActiveGame(null);
