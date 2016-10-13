@@ -13,7 +13,7 @@
             vm.proposal = true;
         };
 
-        vm.completeGame = function() {
+        vm.completeGame = function () {
             gameFactory.addToHistory(gameFactory.getActiveGame());
             gameFactory.setActiveGame(null);
             refresh();
@@ -30,7 +30,15 @@
             refresh();
         };
 
-        vm.clearHistory = function(){
+        vm.hasActiveGame = function () {
+            if (gameFactory.getActiveGame()) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+
+        vm.clearHistory = function () {
             gameFactory.clearHistory();
             refresh();
         };

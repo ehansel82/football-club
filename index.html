@@ -74,7 +74,7 @@
                 <div class="panel-body">
                     <div id="newGameContainer">
                         <button ng-show="vm.proposal" class="btn btn-primary pull-right" ng-click="vm.newGame()">Regenerate?</button>
-                        <button ng-show="!vm.proposal" class="btn btn-primary pull-right" ng-click="vm.newGame()">New Game</button>
+                        <button ng-show="!vm.proposal && !vm.hasActiveGame()" class="btn btn-primary pull-right" ng-click="vm.newGame()">New Game</button>
                     </div>
                     <div ng-show="vm.game">
                         <div ng-show="vm.game.qb">

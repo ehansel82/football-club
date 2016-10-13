@@ -25,6 +25,9 @@
             var half_length = Math.ceil(shuffledPlayers.length / 2);
             game.team1 = shuffledPlayers.splice(0, half_length);
             game.team2 = shuffledPlayers;
+
+            game.team1Score = 0;
+            game.team2Score = 0;
             return game;
         };
 
@@ -38,6 +41,12 @@
 
         gameFactory.getActiveGame = function () {
             return localStorageService.get(activeGameKey);
+        };
+
+        gameFactory.setActiveScore = function(team1Score, team2Score) {
+            var game = gameFactory.getActiveGame();
+            game.team1Score = team1Score;
+            game.team2Score = team2Score;
         };
 
         gameFactory.setActiveGame = function (game) {
