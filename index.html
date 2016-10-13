@@ -42,9 +42,11 @@
         </div>
         <ul class="nav nav-tabs">
             <li role="presentation" ng-class="{active: main.playersSelected}"><a ng-click="main.playersClick()" href="#">Players</a></li>
-            <li role="presentation" ng-class="{active: !main.playersSelected}"><a ng-click="main.gamesClick()" href="#">Games</a></li>
+            <li role="presentation" ng-class="{active: main.gamesSelected}"><a ng-click="main.gamesClick()" href="#">Games</a></li>
+            <li role="presentation" ng-class="{active: main.statsSelected}"><a ng-click="main.statsClick()" href="#">Stats</a></li>
         </ul>
 
+        <!-- Players-->
         <div class="panel panel-default" ng-show="main.playersSelected" ng-controller="playersController as vm" ng-init="vm.refresh()">
             <div class="panel-body">
                 <ul class="list-group" ng-repeat="player in vm.players track by $index">
@@ -69,7 +71,8 @@
             </div>
         </div>
 
-        <div ng-show="!main.playersSelected" ng-controller="gameController as vm">
+        <!--Active Game-->
+        <div ng-show="main.gamesSelected" ng-controller="gameController as vm">
             <div id="activeGamePanel" class="panel panel-default clearfix">
                 <div class="panel-body">
                     <div id="newGameContainer">
