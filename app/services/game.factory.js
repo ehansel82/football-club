@@ -31,6 +31,9 @@
 
         gameFactory.addToHistory = function (game) {
             if (game) {
+                var date = new Date();
+                game.date = date.toLocaleString();
+                game.groupID = (date.getMonth() + 1).toString() + "/" + date.getDate().toString() + "/" + date.getFullYear();
                 var gamesList = gameFactory.getAllHistory();
                 gamesList.splice(0, 0, game);
                 localStorageService.set(gamesHistoryKey, gamesList);
@@ -42,8 +45,6 @@
         };
 
         gameFactory.setActiveGame = function (game) {
-            vm.game.date = new Date().toLocaleString();
-            vm.game.groupID = vm.game.date.getYear().toString() + vm.game.date.getMonth().toString() + vm.game.date.getDay().toString();
             return localStorageService.set(activeGameKey, game);
         };
 

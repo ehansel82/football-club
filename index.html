@@ -128,7 +128,7 @@
 							<div class="qbHistory" ng-show="game.qb"><strong>Quarterback:</strong> <span class="lightBlue">{{game.qb.name}}</span></div>
 							<span ng-show="game.team1Score > game.team2Score">*</span><span class="players lightBlue" ng-repeat="player in game.team1 track by $index">{{player.name}} </span>
 							<div><strong>vs.</strong></div>
-							<span ng-show="game.team2Score > game.team1Score">*TEST</span><span class="players lightBlue" ng-repeat="player in game.team2 track by $index">{{player.name}} </span>
+							<span ng-show="game.team2Score > game.team1Score">*</span><span class="players lightBlue" ng-repeat="player in game.team2 track by $index">{{player.name}} </span>
 							<div>
 								<span>Score: </span><span>Read Team {{game.team1Score}} - Blue Team {{game.team2Score}}</span>
 							</div>
@@ -139,19 +139,32 @@
 		</div>
 
 		<!--Stats-->
+
+
 		<div ng-show="main.statsSelected" ng-controller="statsController as vm" ng-init="vm.refresh()">
 			<div id="statsPanel" class="panel panel-default clearfix">
 				<div class="panel-body">
-					<ul>
-						<li ng-repeat="group in vm.groups">
-							<div>{{group.groupID}}</div>
-							<ul>
-								<li ng-repeat="playerStats in group.playerStats">
-									<span>{{playerStats.name}}: {{playerStats.wins}}</span>
-								</li>
-							</ul>
-						</li>
-						<ul>
+					<div ng-repeat="group in vm.groups">
+                        <h3>{{group.groupID}}</h3>
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Wins</th>
+									<th>Losses</th>
+									<th>Team Points</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="stat in group.playerStats">
+									<td>{{stat.name}}</td>
+									<td>{{stat.wins}}</td>
+									<td>{{stat.losses}}</td>
+                                    <td>{{stat.teamPoints}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
