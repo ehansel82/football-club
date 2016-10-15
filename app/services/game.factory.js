@@ -42,6 +42,8 @@
         };
 
         gameFactory.setActiveGame = function (game) {
+            vm.game.date = new Date().toLocaleString();
+            vm.game.groupID = vm.game.date.getYear().toString() + vm.game.date.getMonth().toString() + vm.game.date.getDay().toString();
             return localStorageService.set(activeGameKey, game);
         };
 
@@ -55,6 +57,7 @@
 
         gameFactory.initGame = function () {
             return {
+                groupID: '',
                 date: '',
                 qb: null,
                 team1: [],
