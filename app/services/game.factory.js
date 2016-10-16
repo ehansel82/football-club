@@ -65,8 +65,8 @@
                 qb: null,
                 team1: [],
                 team2: [],
-                team1Score: null,
-                team2Score: null
+                team1Score: 0,
+                team2Score: 0
             }
         };
 

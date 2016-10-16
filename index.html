@@ -112,10 +112,29 @@
                         </span>
 					</div>
 					<div ng-show="!vm.proposal && vm.game">
-						<button class="btn btn-warning pull-right" ng-click="vm.completeGame()">Complete Game</button>
+						<button class="btn btn-warning pull-right" data-toggle="modal" data-target="#completeGameModal">Complete Game</button>
 					</div>
 				</div>
 			</div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="completeGameModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Complete Game?</h4>
+                </div>
+                <div class="modal-body">
+                    <span>Red Team: {{vm.game.team1Score}}  Blue Team: {{vm.game.team2Score}}</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="completeGameButton" class="btn btn-primary" ng-click="vm.completeGame()">Save</button>
+                </div>
+                </div>
+            </div>
+            </div>
 
 			<!--History-->
 			<div class="panel panel-default">
@@ -173,6 +192,10 @@
             e.preventDefault();
             e.stopPropagation();
             return false;
+        });
+
+        $('#completeGameButton').on('click', function(){
+            $('#completeGameModal').modal('hide');
         });
 
         Array.prototype.contains = function(elem)
