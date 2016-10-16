@@ -56,7 +56,7 @@
 						<span class="listPlayerName players">{{player.name}}</span>
 						<span class="pull-right">
                             <button ng-click="vm.toggleQB($index)" class="qbBtn btn btn-xs" ng-class="{'btn-default': !player.isQB,
-                                                                                                       'btn-info': player.isQB }">QB</button>
+                                                                                                       'btn-info': player.isQB }">All Time Q<span ng-show="!player.isQB">?</span></button>
                             <button ng-click="vm.deletePlayer($index)" class="btn btn-danger btn-xs">Delete</button>
                         </span>
 					</li>
@@ -145,7 +145,7 @@
 			<!--History-->
 			<div id="historyContainer" class="panel panel-default">
 				<div class="panel-heading clearfix">
-					<span id="historyHeader">Game History</span><span><button class="btn btn-danger btn-xs pull-right" ng-click="vm.clearHistory()">Clear History</button></span>
+					<span id="historyHeader">Game History</span><span><button class="btn btn-danger btn-xs pull-right" data-toggle="modal" data-target="#clearHistoryModal">Clear History</button></span>
 				</div>
 				<div class="panel-body">
 					<ul class="list-group">
@@ -165,6 +165,25 @@
 					</ul>
 				</div>
 			</div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="clearHistoryModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title" id="myModalLabel">Clear All History?</h3>
+                </div>
+                <div class="modal-body">
+                    This will wipe out all stats as well.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="clearHistoryButton" class="btn btn-danger" ng-click="vm.clearHistory()">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+                </div>
+            </div>
+            </div>
 		</div>
 
 		<!--Stats-->
@@ -209,6 +228,10 @@
 
         $('#completeGameButton').on('click', function(){
             $('#completeGameModal').modal('hide');
+        });
+
+        $('#clearHistoryButton').on('click', function(){
+            $('#clearHistoryModal').modal('hide');
         });
 
         Array.prototype.contains = function(elem)
