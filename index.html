@@ -157,7 +157,7 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="stat in group.playerStats">
-									<td>{{stat.name}}</td>
+									<td>{{stat.name}} <span class="mvp" ng-show="stat.isMVP">(MVP)</span><span class="lvp" ng-show="stat.isLVP">(LVP)</span></td>
 									<td>{{stat.wins}}</td>
 									<td>{{stat.losses}}</td>
                                     <td>{{stat.teamPoints}}</td>

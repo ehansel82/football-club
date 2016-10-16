@@ -44,7 +44,9 @@
                         name: groupPlayers[i],
                         wins: 0,
                         losses: 0,
-                        teamPoints: 0
+                        teamPoints: 0,
+                        isMVP: false,
+                        isLVP: false
                     });
                 }
             }
@@ -93,6 +95,32 @@
                             }
                         }
                     }
+                    groups[g].playerStats.sort(playerStatsSort);
+                }
+            }
+        }
+
+        function calcMVP(groups) {
+           for (var i = 0; i < groups.length; i++) {
+                if (groups[i].playerStats.length > 1) {
+                    if (groups[i].playerStats[0].wins !== groups[i].playerStats[1].wins &&
+                        groups[i].playerStats[0].teamPoints !== groups[i].playerStats[1].teamPoints) {
+                        groups[i].playerStats[0].isMVP = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        function calcLVP(groups) {
+           for (var i = 0; i < groups.length; i++) {
+               var l = groups[i].playerStats.length;
+                if (l > 1) {
+                    if (groups[i].playerStats[l-1].wins !== groups[i].playerStats[l-2].wins &&
+                        groups[i].playerStats[l-1].teamPoints !== groups[i].playerStats[l-2].teamPoints) {
+                        groups[i].playerStats[l-1].isLVP = true;
+                        break;
+                    }
                 }
             }
         }
@@ -101,7 +129,18 @@
             var groups = buildGroupObjects(games);
             buildPlayerStatObjects(groups, games);
             calcStats(groups, games);
+            calcMVP(groups);
+            calcLVP(groups);
             return groups;
+        }
+
+        function playerStatsSort(a, b) {
+            if (a.wins === b.wins) {
+                return b.teamPoints - a.teamPoints;
+            }
+            else {
+                return b.wins - a.wins;
+            }
         }
     }
 })();
