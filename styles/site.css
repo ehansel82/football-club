@@ -18,11 +18,6 @@
     font-weight: bold;
 }
 
-#activeGamePanel{
-    padding-top: 30px;
-    margin-bottom: 50px;
-}
-
 .qbBtn {
     width: 50px;
     margin-right: 20px;
@@ -51,4 +46,19 @@
 
 #historyHeader{
     font-size: larger;
+}
+
+#historyContainer{
+    margin-top: 50px;
+}
+
+.darkBlue{
+    color: #000066;
+}
+
+.mvp {
+    color: red;
+}
+.lvp {
+    color: brown;
 }

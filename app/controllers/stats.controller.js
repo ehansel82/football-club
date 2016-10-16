@@ -107,10 +107,9 @@
         function calcMVP(groups) {
             for (var i = 0; i < groups.length; i++) {
                 if (groups[i].playerStats.length > 1) {
-                    if (groups[i].playerStats[0].wins !== groups[i].playerStats[1].wins &&
+                    if (groups[i].playerStats[0].wins !== groups[i].playerStats[1].wins ||
                         groups[i].playerStats[0].teamPoints !== groups[i].playerStats[1].teamPoints) {
                         groups[i].playerStats[0].isMVP = true;
-                        break;
                     }
                 }
             }
@@ -120,10 +119,9 @@
             for (var i = 0; i < groups.length; i++) {
                 var l = groups[i].playerStats.length;
                 if (l > 1) {
-                    if (groups[i].playerStats[l - 1].wins !== groups[i].playerStats[l - 2].wins &&
+                    if (groups[i].playerStats[l - 1].wins !== groups[i].playerStats[l - 2].wins ||
                         groups[i].playerStats[l - 1].teamPoints !== groups[i].playerStats[l - 2].teamPoints) {
                         groups[i].playerStats[l - 1].isLVP = true;
-                        break;
                     }
                 }
             }

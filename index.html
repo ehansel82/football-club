@@ -77,12 +77,12 @@
 		<div ng-show="main.gamesSelected" ng-controller="gameController as vm">
 			<div id="activeGamePanel" class="panel panel-default clearfix">
 				<div class="panel-body">
+                    <h3 ng-show="vm.hasActiveGame()">Active Game</h3>
 					<div id="newGameContainer">
-						<button ng-show="vm.proposal" class="btn btn-primary pull-right" ng-click="vm.newGame()">Regenerate?</button>
 						<button ng-show="!vm.proposal && !vm.hasActiveGame()" class="btn btn-primary pull-right" ng-click="vm.newGame()">New Game</button>
 					</div>
 					<div ng-show="vm.game">
-						<div ng-show="vm.game.qb">
+						<div style="padding-bottom: 20px;" ng-show="vm.game.qb">
 							<span><strong>Quarterback: </strong></span><span>{{vm.game.qb.name}}</span>
 						</div>
 						<h4><strong>Red Team</strong></h4>
@@ -121,12 +121,18 @@
             <div class="modal fade" id="completeGameModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-info">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Complete Game?</h4>
+                    <h3 class="modal-title" id="myModalLabel">Complete Game?</h3>
                 </div>
                 <div class="modal-body">
-                    <span>Red Team: {{vm.game.team1Score}}  Blue Team: {{vm.game.team2Score}}</span>
+                    <div><strong>Final Score</strong></div>
+                    <br>
+                    <div>Red Team: {{vm.game.team1Score}}</div>
+                    <div>(<span class="players" ng-repeat="player in vm.game.team1 track by $index">{{player.name}}<span ng-show="!$last">, </span></span>)</div>
+                    <hr>
+                    <div>Blue Team: {{vm.game.team2Score}}</div>
+                    <div>(<span class="players" ng-repeat="player in vm.game.team2 track by $index">{{player.name}}<span ng-show="!$last">, </span></span>)</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -137,21 +143,24 @@
             </div>
 
 			<!--History-->
-			<div class="panel panel-default">
+			<div id="historyContainer" class="panel panel-default">
 				<div class="panel-heading clearfix">
 					<span id="historyHeader">Game History</span><span><button class="btn btn-danger btn-xs pull-right" ng-click="vm.clearHistory()">Clear History</button></span>
 				</div>
 				<div class="panel-body">
 					<ul class="list-group">
-						<li class="list-group-item clearfix" ng-repeat="game in vm.history track by $index">
-							<div class="dateHistory"><strong>Date:</strong> <span class="lightBlue">{{game.date}}</span></div>
-							<div class="qbHistory" ng-show="game.qb"><strong>Quarterback:</strong> <span class="lightBlue">{{game.qb.name}}</span></div>
-							<span ng-show="game.team1Score > game.team2Score">*</span><span class="players lightBlue" ng-repeat="player in game.team1 track by $index">{{player.name}} </span>
-							<div><strong>vs.</strong></div>
-							<span ng-show="game.team2Score > game.team1Score">*</span><span class="players lightBlue" ng-repeat="player in game.team2 track by $index">{{player.name}} </span>
-							<div>
-								<span>Score: </span><span>Read Team {{game.team1Score}} - Blue Team {{game.team2Score}}</span>
-							</div>
+						<li class="list-group-item clearfix" style="font-size: larger;" ng-repeat="game in vm.history track by $index">
+							<div class="dateHistory"><strong class="darkBlue">Date:</strong> <span>{{game.date}}</span></div>
+							<div class="qbHistory" ng-show="game.qb"><strong class="darkBlue">Quarterback:</strong> <span>{{game.qb.name}}</span></div>
+							<span ng-show="game.team1Score > game.team2Score">* </span>
+                            <span ng-show="game.team1Score < game.team2Score">&nbsp;&nbsp;</span>
+                            <span ng-show="game.team1Score !== null && game.team1Score !== undefined">({{game.team1Score}}) </span>
+                            <span class="players" ng-repeat="player in game.team1 track by $index">{{player.name}}<span ng-show="!$last">, </span></span>
+							<div><strong class="darkBlue">&nbsp;&nbsp;&nbsp;&nbsp;vs.</strong></div>
+							<span ng-show="game.team2Score > game.team1Score">* </span>
+                            <span ng-show="game.team2Score < game.team1Score">&nbsp;&nbsp;</span>
+                            <span ng-show="game.team2Score !== null && game.team2Score !== undefined">({{game.team2Score}}) </span>
+                            <span class="players" ng-repeat="player in game.team2 track by $index">{{player.name}}<span ng-show="!$last">, </span></span>
 						</li>
 					</ul>
 				</div>
@@ -160,30 +169,34 @@
 
 		<!--Stats-->
 		<div ng-show="main.statsSelected" ng-controller="statsController as vm" ng-init="vm.refresh()">
-			<div id="statsPanel" class="panel panel-default clearfix">
-				<div class="panel-body">
-					<div ng-repeat="group in vm.groups">
-                        <h3>{{group.groupID}}</h3>
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th>Wins</th>
-									<th>Losses</th>
-									<th>Team Points</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="stat in group.playerStats">
-									<td><span class="players">{{stat.name}} </span><span class="mvp" ng-show="stat.isMVP">(MVP)</span><span class="lvp" ng-show="stat.isLVP">(LVP)</span></td>
-									<td>{{stat.wins}}</td>
-									<td>{{stat.losses}}</td>
-                                    <td>{{stat.teamPoints}}</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+			<div id="statsPanel" class="well clearfix">
+                <div ng-repeat="group in vm.groups">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3>{{group.groupID}}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Wins</th>
+                                        <th>Losses</th>
+                                        <th>Team Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="stat in group.playerStats">
+                                        <td><span class="players">{{stat.name}} </span><span class="mvp" ng-show="stat.isMVP">(MVP)</span><span class="lvp" ng-show="stat.isLVP">(LVP)</span></td>
+                                        <td>{{stat.wins}}</td>
+                                        <td>{{stat.losses}}</td>
+                                        <td>{{stat.teamPoints}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</div>
 	</div>
