@@ -1,10 +1,14 @@
 (function () {
     angular.module('footballClub')
-        .controller('statsController', ['gameFactory', statsController]);
+        .controller('statsController', ['gameFactory', '$scope', statsController]);
 
-    function statsController(gameFactory) {
+    function statsController(gameFactory, $scope) {
 
         var vm = this;
+
+        $scope.$on('historyUpdate', function (event, data) {
+            vm.refresh();
+        });
 
         vm.refresh = function () {
             var games = gameFactory.getAllHistory().filter(function (x) { return x.groupID !== undefined });
@@ -101,7 +105,7 @@
         }
 
         function calcMVP(groups) {
-           for (var i = 0; i < groups.length; i++) {
+            for (var i = 0; i < groups.length; i++) {
                 if (groups[i].playerStats.length > 1) {
                     if (groups[i].playerStats[0].wins !== groups[i].playerStats[1].wins &&
                         groups[i].playerStats[0].teamPoints !== groups[i].playerStats[1].teamPoints) {
@@ -113,12 +117,12 @@
         }
 
         function calcLVP(groups) {
-           for (var i = 0; i < groups.length; i++) {
-               var l = groups[i].playerStats.length;
+            for (var i = 0; i < groups.length; i++) {
+                var l = groups[i].playerStats.length;
                 if (l > 1) {
-                    if (groups[i].playerStats[l-1].wins !== groups[i].playerStats[l-2].wins &&
-                        groups[i].playerStats[l-1].teamPoints !== groups[i].playerStats[l-2].teamPoints) {
-                        groups[i].playerStats[l-1].isLVP = true;
+                    if (groups[i].playerStats[l - 1].wins !== groups[i].playerStats[l - 2].wins &&
+                        groups[i].playerStats[l - 1].teamPoints !== groups[i].playerStats[l - 2].teamPoints) {
+                        groups[i].playerStats[l - 1].isLVP = true;
                         break;
                     }
                 }

@@ -1,9 +1,9 @@
 (function () {
 
     angular.module('footballClub')
-        .factory('gameFactory', ['localStorageService', 'playerFactory', gameFactory]);
+        .factory('gameFactory', ['localStorageService', 'playerFactory', '$rootScope', gameFactory]);
 
-    function gameFactory(localStorageService, playerFactory) {
+    function gameFactory(localStorageService, playerFactory, $rootScope) {
 
         var gamesHistoryKey = 'gamesHistory';
         var activeGameKey = 'activeGame';
@@ -37,6 +37,7 @@
                 var gamesList = gameFactory.getAllHistory();
                 gamesList.splice(0, 0, game);
                 localStorageService.set(gamesHistoryKey, gamesList);
+                $rootScope.$broadcast('historyUpdate');
             }
         };
 
@@ -53,7 +54,8 @@
         };
 
         gameFactory.clearHistory = function () {
-            return localStorageService.set(gamesHistoryKey, null);
+            localStorageService.set(gamesHistoryKey, null);
+            $rootScope.$broadcast('historyUpdate');
         };
 
         gameFactory.initGame = function () {
