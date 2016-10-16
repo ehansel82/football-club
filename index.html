@@ -37,8 +37,9 @@
 					<img id="footballImg" class="media-object" src="images/football1.jpg" alt="football">
 				</a>
 			</div>
-			<div class="media-body" style="vertical-align: middle;">
+			<div class="media-body clearfix" style="vertical-align: middle;">
 				<h2 class="media-heading">Football Club</h2>
+                <span class="pull-right">v{{main.version}}</span>
 			</div>
 		</div>
 		<ul class="nav nav-tabs">
@@ -139,8 +140,6 @@
 		</div>
 
 		<!--Stats-->
-
-
 		<div ng-show="main.statsSelected" ng-controller="statsController as vm" ng-init="vm.refresh()">
 			<div id="statsPanel" class="panel panel-default clearfix">
 				<div class="panel-body">

@@ -1,10 +1,12 @@
 (function () {
     angular.module('footballClub')
-        .controller('mainController', [mainController]);
+        .controller('mainController', ['APP_VERSION', mainController]);
 
-    function mainController() {
+    function mainController(APP_VERSION) {
 
         var vm = this;
+
+        vm.version = APP_VERSION;
 
         vm.playersSelected = true;
         vm.gamesSelected = false;
