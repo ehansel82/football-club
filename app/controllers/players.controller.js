@@ -8,6 +8,7 @@
 
         vm.addPlayer = function () {
             if (vm.playerToAdd.name) {
+                vm.playerToAdd.name = vm.playerToAdd.name.toLowerCase();
                 playerFactory.add(vm.playerToAdd);
                 vm.refresh();
             }

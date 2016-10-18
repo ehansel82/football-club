@@ -71,10 +71,12 @@
                                 winners = games[i].team1.map(getName);
                                 losers = games[i].team2.map(getName);
                                 winnerPoints = games[i].team1Score;
+                                loserPoints = games[i].team2Score;
                             } else if (games[i].team2Score > games[i].team1Score) {
                                 winners = games[i].team2.map(getName);
                                 losers = games[i].team1.map(getName);
-                                loserPoints = games[i].team2Score;
+                                winnerPoints = games[i].team2Score;
+                                loserPoints = games[i].team1Score;
                             } else {
                                 tiers = games[i].team1.map(getName).concat(games[i].team2.map(getName));
                                 tierPoints = games[i].team1Score;
@@ -92,7 +94,7 @@
                                     groups[g].playerStats[s].teamPoints += loserPoints;
                                 }
                             }
-                            for (var t = 0; t < losers.length; t++) {
+                            for (var t = 0; t < tiers.length; t++) {
                                 if (tiers[t] === groups[g].playerStats[s].name) {
                                     groups[g].playerStats[s].teamPoints += tierPoints;
                                 }
