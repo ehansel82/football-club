@@ -1,13 +1,29 @@
 /// <reference path="../../typings/tsd.d.ts" />
 
-module app.controllers{
+module app.controllers {
 
-    export class StatsController{
-        
-        
-
+    class GameDay {
+        date: string;
+        playerStats: PlayerStats[];
     }
 
+    export class StatsController {
+
+        private buildGameDays(games: Game[]): GameDay[] {
+            let days: string[];
+            days = _.uniq(games.map(x => x.date));
+
+            let gameDays: GameDay[];
+            _.each(days, x => {
+                let gameDay = new GameDay();
+                gameDay.date = x;
+                gameDay.playerStats = new Array<PlayerStats>();
+                gameDays.push(gameDay);
+            });
+
+            return gameDays;
+        }
+    }
 }
 
 (function () {

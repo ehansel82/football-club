@@ -1,5 +1,4 @@
 class Game {
-    groupID: string;
     date: string;
     qb: boolean;
     team1: Player[];
