@@ -4,6 +4,8 @@
 module app.controllers
 {
     export interface IPlayersController{
+        playerToAdd: Player;
+        players: Player[];
         addPlayer: () => void;
         deletePlayer: (idx: number) => void;
         toggleQB: (idx: number) => void;
@@ -11,12 +13,14 @@ module app.controllers
     }
 
     export class PlayersController implements IPlayersController{
+        
         static controllerID = 'playersController';
         static $inject = ['playerFactory'];
 
         public playerToAdd: Player;
         public players: Player[];
 
+        /* @ngInject */
         constructor(private playerFactory: any) {
 
         }
@@ -46,5 +50,5 @@ module app.controllers
     }
 
     angular.module('footballClub')
-    .controller(PlayersController.controllerID, ['playerFactory', PlayersController]);
+           .controller(PlayersController.controllerID, PlayersController);
 }
