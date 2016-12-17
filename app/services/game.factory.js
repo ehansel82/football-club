@@ -32,8 +32,7 @@
         gameFactory.addToHistory = function (game) {
             if (game) {
                 var date = new Date();
-                game.date = date.toLocaleString();
-                game.groupID = (date.getMonth() + 1).toString() + "/" + date.getDate().toString() + "/" + date.getFullYear();
+                game.date = (date.getMonth() + 1).toString() + "/" + date.getDate().toString() + "/" + date.getFullYear();
                 var gamesList = gameFactory.getAllHistory();
                 gamesList.splice(0, 0, game);
                 localStorageService.set(gamesHistoryKey, gamesList);

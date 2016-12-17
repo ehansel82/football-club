@@ -2,18 +2,47 @@
 
 module app.controllers {
 
-    class GameDay {
-        date: string;
-        playerStats: PlayerStats[];
+    export interface IStatsController {
+        groups: GameDay[];
+        refresh: () => void;
     }
 
-    export class StatsController {
+    export class StatsController implements IStatsController {
+
+        static controllerID = 'statsController';
+        static $inject = ['gameFactory', '$scope'];
+
+        private games: Game[];
+        
+        public groups: GameDay[];
+
+        /* @ngInject */
+        constructor(private gameFactory: any, private $scope: any) {    
+            let that = this;      
+            $scope.$on('historyUpdate', function (event: any, data: any) {
+                that.refresh();
+            });
+        }
+
+        public refresh(): void {
+            let games = this.gameFactory.getAllHistory().filter(function (x) { return x.groupID !== undefined });
+            this.groups = this.getStats(games);
+        }
+
+        private getStats(games: any): GameDay[] {
+            let gameDays: GameDay[] = this.buildGameDays(games);
+            this.buildPlayerStats(gameDays, games);
+            this.calcGameDayStats(gameDays, games);
+            this.calcMVP(gameDays);
+            this.calcLVP(gameDays);
+            return gameDays;
+        }
 
         private buildGameDays(games: Game[]): GameDay[] {
             let days: string[];
             days = _.uniq(games.map(x => x.date));
 
-            let gameDays: GameDay[];
+            let gameDays: GameDay[] = new Array<GameDay>();
             _.each(days, x => {
                 let gameDay = new GameDay();
                 gameDay.date = x;
@@ -23,150 +52,84 @@ module app.controllers {
 
             return gameDays;
         }
-    }
-}
 
-(function () {
-    angular.module('footballClub')
-        .controller('statsController', ['gameFactory', '$scope', statsController]);
+        private buildPlayerStats(gameDays: GameDay[], games: Game[]): void {
+            _.each(gameDays, gd => {
+                let gamesOnGameDay = _.where(games, { date: gd.date })
 
-    function statsController(gameFactory, $scope) {
-
-        var vm = this;
-
-        $scope.$on('historyUpdate', function (event, data) {
-            vm.refresh();
-        });
-
-        vm.refresh = function () {
-            var games = gameFactory.getAllHistory().filter(function (x) { return x.groupID !== undefined });
-            vm.groups = getStats(games);
-        }
-
-        function buildGroupObjects(games) {
-            var groupIDs = games.map(function (x) {
-                return x.groupID;
-            });
-            var uniqueGroups = groupIDs.distinct();
-            var groupObjects = [];
-            for (var i = 0; i < uniqueGroups.length; i++) {
-                groupObjects.push({
-                    groupID: uniqueGroups[i],
-                    playerStats: []
+                let gameDayPlayers: string[] = new Array<string>();
+                _.each(gamesOnGameDay, x => {
+                    gameDayPlayers = gameDayPlayers.concat(_.map(x.team1, x => x.name).concat(_.map(x.team2, x => x.name)))
                 });
-            }
-            return groupObjects;
+                gameDayPlayers = _.uniq(gameDayPlayers);
+
+                _.each(gameDayPlayers, x => {
+                    var playerStats = new PlayerStats();
+                    playerStats.name = x;
+                    gd.playerStats.push(playerStats);
+                });
+            });
         }
 
-        function getName(x) {
-            return x.name;
-        }
+        private calcGameDayStats(gameDays: GameDay[], games: Game[]): void {
+            _.each(gameDays, gd => {
+                _.each(gd.playerStats, stat => {
+                    this.calcGamePlayerStats(stat, gd.date, games);
+                })
 
-        function buildPlayerStatObjects(groups, games) {
-            for (var gr = 0; gr < groups.length; gr++) {
-                var groupPlayers = [];
-                for (var ga = 0; ga < games.length; ga++) {
-                    if (groups[gr].groupID === games[ga].groupID) {
-                        groupPlayers = groupPlayers.concat(games[ga].team1.map(getName).concat(games[ga].team2.map(getName)));
+                gd.playerStats.sort(this.playerStatsSort);
+            });
+        }
+        
+        private calcGamePlayerStats(playerStat: PlayerStats, date: string, games: Game[]): void {
+            _.each(games, g => {
+                if(date === g.date){
+                    let winners: string[] = new Array<string>();
+                    let losers: string[] = new Array<string>();
+                    let tiers: string[] = new Array<string>();
+                    let winnerPoints: number = 0;
+                    let loserPoints: number = 0;
+                    let tierPoints: number = 0;
+
+                    if (g.team1Score > g.team2Score) {
+                        winners = g.team1.map(x => x.name);
+                        losers = g.team2.map(x => x.name);
+                        winnerPoints = g.team1Score;
+                        loserPoints = g.team2Score;
+                    } else if (g.team2Score > g.team1Score) {
+                        winners = g.team2.map(x => x.name);
+                        losers = g.team1.map(x => x.name);
+                        winnerPoints = g.team2Score;
+                        loserPoints = g.team1Score;
+                    } else {
+                        tiers = g.team1.map(x => x.name).concat(g.team2.map(x => x.name));
+                        tierPoints = g.team1Score;
                     }
-                }
-                var uniqueGroupPlayers = groupPlayers.distinct();
-                for (var i = 0; i < uniqueGroupPlayers.length; i++) {
-                    groups[gr].playerStats.push({
-                        name: groupPlayers[i],
-                        wins: 0,
-                        losses: 0,
-                        teamPoints: 0,
-                        isMVP: false,
-                        isLVP: false
+
+                    _.each(winners, w => {
+                        if (w === playerStat.name){
+                            playerStat.wins++;
+                            playerStat.teamPoints += winnerPoints;
+                        }
+                    });
+
+                    _.each(losers, l => {
+                        if (l === playerStat.name){
+                            playerStat.losses++;
+                            playerStat.teamPoints += loserPoints;
+                        }
+                    });
+
+                    _.each(tiers, t => {
+                        if (t === playerStat.name){
+                            playerStat.teamPoints += tierPoints;
+                        }
                     });
                 }
-            }
-        }
+            });
+        } 
 
-        function calcStats(groups, games) {
-            for (var g = 0; g < groups.length; g++) {
-                for (var s = 0; s < groups[g].playerStats.length; s++) {
-                    for (var i = 0; i < games.length; i++) {
-                        if (groups[g].groupID === games[i].groupID) {
-                            var winners = [];
-                            var losers = [];
-                            var tiers = [];
-                            var winnerPoints = 0;
-                            var loserPoints = 0;
-                            var tierPoints = 0;
-                            if (games[i].team1Score > games[i].team2Score) {
-                                winners = games[i].team1.map(getName);
-                                losers = games[i].team2.map(getName);
-                                winnerPoints = games[i].team1Score;
-                                loserPoints = games[i].team2Score;
-                            } else if (games[i].team2Score > games[i].team1Score) {
-                                winners = games[i].team2.map(getName);
-                                losers = games[i].team1.map(getName);
-                                winnerPoints = games[i].team2Score;
-                                loserPoints = games[i].team1Score;
-                            } else {
-                                tiers = games[i].team1.map(getName).concat(games[i].team2.map(getName));
-                                tierPoints = games[i].team1Score;
-                            }
-
-                            for (var w = 0; w < winners.length; w++) {
-                                if (winners[w] === groups[g].playerStats[s].name) {
-                                    groups[g].playerStats[s].wins++;
-                                    groups[g].playerStats[s].teamPoints += winnerPoints;
-                                }
-                            }
-                            for (var l = 0; l < losers.length; l++) {
-                                if (losers[l] === groups[g].playerStats[s].name) {
-                                    groups[g].playerStats[s].losses++;
-                                    groups[g].playerStats[s].teamPoints += loserPoints;
-                                }
-                            }
-                            for (var t = 0; t < tiers.length; t++) {
-                                if (tiers[t] === groups[g].playerStats[s].name) {
-                                    groups[g].playerStats[s].teamPoints += tierPoints;
-                                }
-                            }
-                        }
-                    }
-                    groups[g].playerStats.sort(playerStatsSort);
-                }
-            }
-        }
-
-        function calcMVP(groups) {
-            for (var i = 0; i < groups.length; i++) {
-                if (groups[i].playerStats.length > 1) {
-                    if (groups[i].playerStats[0].wins !== groups[i].playerStats[1].wins ||
-                        groups[i].playerStats[0].teamPoints !== groups[i].playerStats[1].teamPoints) {
-                        groups[i].playerStats[0].isMVP = true;
-                    }
-                }
-            }
-        }
-
-        function calcLVP(groups) {
-            for (var i = 0; i < groups.length; i++) {
-                var l = groups[i].playerStats.length;
-                if (l > 1) {
-                    if (groups[i].playerStats[l - 1].wins !== groups[i].playerStats[l - 2].wins ||
-                        groups[i].playerStats[l - 1].teamPoints !== groups[i].playerStats[l - 2].teamPoints) {
-                        groups[i].playerStats[l - 1].isLVP = true;
-                    }
-                }
-            }
-        }
-
-        function getStats(games) {
-            var groups = buildGroupObjects(games);
-            buildPlayerStatObjects(groups, games);
-            calcStats(groups, games);
-            calcMVP(groups);
-            calcLVP(groups);
-            return groups;
-        }
-
-        function playerStatsSort(a, b) {
+        private playerStatsSort(a: PlayerStats, b: PlayerStats): number {
             if (a.wins === b.wins) {
                 return b.teamPoints - a.teamPoints;
             }
@@ -174,5 +137,31 @@ module app.controllers {
                 return b.wins - a.wins;
             }
         }
+
+        private calcMVP(gameDays: GameDay[]): void{
+            _.each(gameDays, gd => {
+                if(gd.playerStats.length > 1){
+                    if (gd.playerStats[0].wins !== gd.playerStats[1].wins ||
+                        gd.playerStats[0].teamPoints !== gd.playerStats[1].teamPoints) {
+                        gd.playerStats[0].isMVP = true;
+                    }                    
+                }
+            });
+        }
+
+        private calcLVP(gameDays: GameDay[]): void{
+            _.each(gameDays, gd => {
+                var l = gd.playerStats.length;
+                if(gd.playerStats.length > l){
+                    if (gd.playerStats[l - 1].wins !== gd.playerStats[l - 2].wins ||
+                        gd.playerStats[l - 1].teamPoints !== gd.playerStats[l - 2].teamPoints) {
+                        gd.playerStats[l - 1].isLVP = true;
+                    }                             
+                }
+            });
+        }
     }
-})();
+
+    angular.module('footballClub')
+           .controller(StatsController.controllerID, StatsController);
+}

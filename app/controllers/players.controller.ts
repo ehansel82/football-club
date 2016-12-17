@@ -1,5 +1,7 @@
 /// <reference path="../../typings/tsd.d.ts" />
 /// <reference path="../models/player.ts" />
+/// <reference path="../services/player.factory.ts"/>
+
 
 module app.controllers
 {
@@ -21,7 +23,7 @@ module app.controllers
         public players: Player[];
 
         /* @ngInject */
-        constructor(private playerFactory: any) {
+        constructor(private playerFactory: app.services.PlayerFactory) {
 
         }
 
@@ -45,7 +47,7 @@ module app.controllers
 
         refresh(): void {
             this.players = this.playerFactory.getAll();
-            this.playerToAdd = this.playerFactory.newPlayer('');
+            this.playerToAdd = new Player('');
         }
     }
 

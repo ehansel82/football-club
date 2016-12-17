@@ -1,4 +1,11 @@
 class Player {
-    isQB: boolean;
-    name: string;
+
+    constructor(playerName: string) {
+        this.name = playerName;
+        this.isQB = false;
+
+    }
+
+    public isQB: boolean;
+    public name: string;
 }
