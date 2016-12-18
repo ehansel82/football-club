@@ -1,5 +1,11 @@
 var Game = (function () {
     function Game() {
+        this.date = '';
+        this.qb = null;
+        this.team1 = new Array();
+        this.team2 = new Array();
+        this.team1Score = 0;
+        this.team2Score = 0;
     }
     return Game;
 }());
@@ -48,7 +54,7 @@ var app;
                 this.refresh();
             };
             GameController.prototype.clearHistory = function () {
-                this.gameFactory.clearHistory();
+                this.gameFactory.clearAllHistory();
                 this.refresh();
             };
             GameController.controllerID = 'gameController';
@@ -74,7 +80,6 @@ var app;
         var PlayerFactory = (function () {
             /* @ngInject */
             function PlayerFactory(localStorageService) {
-                this.localStorageService = localStorageService;
                 this.localStorageService = localStorageService;
             }
             PlayerFactory.prototype.getAll = function () {
@@ -171,7 +176,7 @@ var app;
                 });
             }
             StatsController.prototype.refresh = function () {
-                var games = this.gameFactory.getAllHistory().filter(function (x) { return x.groupID !== undefined; });
+                var games = this.gameFactory.getAllHistory();
                 this.groups = this.getStats(games);
             };
             StatsController.prototype.getStats = function (games) {
@@ -311,4 +316,71 @@ var PlayerStats = (function () {
     }
     return PlayerStats;
 }());
+/// <reference path="../../typings/tsd.d.ts" />
+var app;
+(function (app) {
+    var services;
+    (function (services) {
+        var GameFactory = (function () {
+            /* @ngInject */
+            function GameFactory(localStorageService, playerFactory, $rootScope) {
+                this.localStorageService = localStorageService;
+                this.playerFactory = playerFactory;
+                this.$rootScope = $rootScope;
+            }
+            GameFactory.prototype.newGame = function () {
+                var game = new Game();
+                var players = this.playerFactory.getAll().slice(0);
+                var len = players.length;
+                for (var i = 0; i < len; i++) {
+                    if (players[i].isQB) {
+                        game.qb = players.splice(i, 1)[0];
+                        break;
+                    }
+                }
+                var shuffledPlayers = _.shuffle(players);
+                var half_length = Math.ceil(shuffledPlayers.length / 2);
+                game.team1 = shuffledPlayers.splice(0, half_length);
+                game.team2 = shuffledPlayers;
+                return game;
+            };
+            GameFactory.prototype.addToHistory = function (game) {
+                if (game) {
+                    var date = new Date();
+                    game.date = (date.getMonth() + 1).toString() + "/" + date.getDate().toString() + "/" + date.getFullYear();
+                    var gamesList = this.getAllHistory();
+                    gamesList.splice(0, 0, game);
+                    this.localStorageService.set(GameFactory.gamesHistoryKey, gamesList);
+                    this.$rootScope.$broadcast('historyUpdate');
+                }
+            };
+            GameFactory.prototype.getActiveGame = function () {
+                return this.localStorageService.get(GameFactory.activeGameKey);
+            };
+            ;
+            GameFactory.prototype.setActiveGame = function (game) {
+                return this.localStorageService.set(GameFactory.activeGameKey, game);
+            };
+            ;
+            GameFactory.prototype.getAllHistory = function () {
+                return this.localStorageService.get(GameFactory.gamesHistoryKey) || new Array();
+            };
+            ;
+            GameFactory.prototype.clearAllHistory = function () {
+                this.localStorageService.set(GameFactory.gamesHistoryKey, null);
+                this.$rootScope.$broadcast('historyUpdate');
+            };
+            GameFactory.instance = function (localStorageService, playerFactory, $rootScope) {
+                return new GameFactory(localStorageService, playerFactory, $rootScope);
+            };
+            GameFactory.factoryID = 'gameFactory';
+            GameFactory.gamesHistoryKey = 'gamesHistory';
+            GameFactory.activeGameKey = 'activeGame';
+            GameFactory.$inject = ['localStorageService', 'playerFactory', '$rootScope'];
+            return GameFactory;
+        }());
+        services.GameFactory = GameFactory;
+        angular.module('footballClub').factory(GameFactory.factoryID, GameFactory.instance);
+    })(services = app.services || (app.services = {}));
+})(app || (app = {}));
 //# sourceMappingURL=app.js.map

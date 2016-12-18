@@ -16,7 +16,6 @@ module app.services {
 
         /* @ngInject */
         constructor(private localStorageService: any) {
-            this.localStorageService = localStorageService;
         }
 
         public getAll(): Array<Player> {

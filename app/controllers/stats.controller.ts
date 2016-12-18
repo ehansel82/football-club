@@ -17,7 +17,7 @@ module app.controllers {
         public groups: GameDay[];
 
         /* @ngInject */
-        constructor(private gameFactory: any, private $scope: any) {    
+        constructor(private gameFactory: app.services.IGameFactory, private $scope: any) {    
             let that = this;      
             $scope.$on('historyUpdate', function (event: any, data: any) {
                 that.refresh();
@@ -25,7 +25,7 @@ module app.controllers {
         }
 
         public refresh(): void {
-            let games = this.gameFactory.getAllHistory().filter(function (x) { return x.groupID !== undefined });
+            let games = this.gameFactory.getAllHistory();
             this.groups = this.getStats(games);
         }
 

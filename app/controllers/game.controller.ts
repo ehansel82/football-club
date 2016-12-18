@@ -23,7 +23,7 @@ module app.controllers {
         static $inject = ['gameFactory'];
 
         /* @ngInject */
-        constructor(private gameFactory: any) {
+        constructor(private gameFactory: app.services.IGameFactory) {
 
         }
 
@@ -71,7 +71,7 @@ module app.controllers {
         }
 
         clearHistory(): void {
-            this.gameFactory.clearHistory();
+            this.gameFactory.clearAllHistory();
             this.refresh();
         }
     }
