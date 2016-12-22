@@ -355,6 +355,9 @@ var GameDay = (function () {
 }());
 var PlayerStats = (function () {
     function PlayerStats() {
+        this.wins = 0;
+        this.losses = 0;
+        this.teamPoints = 0;
     }
     return PlayerStats;
 }());
