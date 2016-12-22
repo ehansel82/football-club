@@ -1,3 +1,9 @@
+var app;
+(function (app) {
+    angular.module('footballClub', ['ngAnimate', 'LocalStorageModule'])
+        .constant('APP_VERSION', '1.1.1');
+    ;
+})(app || (app = {}));
 var Game = (function () {
     function Game() {
         this.date = '';
@@ -64,6 +70,42 @@ var app;
         controllers.GameController = GameController;
         angular.module('footballClub')
             .controller(GameController.controllerID, GameController);
+    })(controllers = app.controllers || (app.controllers = {}));
+})(app || (app = {}));
+var app;
+(function (app) {
+    var controllers;
+    (function (controllers) {
+        var MainController = (function () {
+            function MainController(APP_VERSION) {
+                this.version = APP_VERSION;
+                this.playersSelected = true;
+                this.gamesSelected = false;
+                this.statsSelected = false;
+            }
+            MainController.prototype.playersClick = function () {
+                this.clearAll();
+                this.playersSelected = true;
+            };
+            MainController.prototype.gamesClick = function () {
+                this.clearAll();
+                this.gamesSelected = true;
+            };
+            MainController.prototype.statsClick = function () {
+                this.clearAll();
+                this.statsSelected = true;
+            };
+            MainController.prototype.clearAll = function () {
+                this.playersSelected = false;
+                this.gamesSelected = false;
+                this.statsSelected = false;
+            };
+            MainController.controllerID = 'mainController';
+            MainController.$inject = ['APP_VERSION'];
+            return MainController;
+        }());
+        controllers.MainController = MainController;
+        angular.module('footballClub').controller(MainController.controllerID, MainController);
     })(controllers = app.controllers || (app.controllers = {}));
 })(app || (app = {}));
 var Player = (function () {
