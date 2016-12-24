@@ -7,7 +7,7 @@ module app.controllers {
     export interface IGameController {
         proposal: boolean;
         game: Game;
-        history: any;
+        history: Array<Game>;
         newGame(): void;
         saveGame(): void;
         completeGame(): void;
@@ -29,7 +29,7 @@ module app.controllers {
 
         game: Game;
         proposal: boolean;
-        history: any;
+        history: Array<Game>;
 
         private refresh(): void {
             this.proposal = false;

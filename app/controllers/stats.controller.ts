@@ -29,7 +29,7 @@ module app.controllers {
             this.groups = this.getStats(games);
         }
 
-        private getStats(games: any): GameDay[] {
+        private getStats(games: Array<Game>): GameDay[] {
             let gameDays: GameDay[] = this.buildGameDays(games);
             this.buildPlayerStats(gameDays, games);
             this.calcGameDayStats(gameDays, games);
