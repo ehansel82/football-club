@@ -13,12 +13,12 @@ module app.controllers {
         static $inject = ['gameFactory', '$scope'];
 
         private games: Game[];
-        
+
         public groups: GameDay[];
 
         /* @ngInject */
-        constructor(private gameFactory: app.services.IGameFactory, private $scope: any) {    
-            let that = this;      
+        constructor(private gameFactory: app.services.IGameFactory, private $scope: any) {
+            let that = this;
             $scope.$on('historyUpdate', function (event: any, data: any) {
                 that.refresh();
             });
@@ -80,10 +80,10 @@ module app.controllers {
                 gd.playerStats.sort(this.playerStatsSort);
             });
         }
-        
+
         private calcGamePlayerStats(playerStat: PlayerStats, date: string, games: Game[]): void {
             _.each(games, g => {
-                if(date === g.date){
+                if (date === g.date) {
                     let winners: string[] = new Array<string>();
                     let losers: string[] = new Array<string>();
                     let tiers: string[] = new Array<string>();
@@ -107,27 +107,27 @@ module app.controllers {
                     }
 
                     _.each(winners, w => {
-                        if (w === playerStat.name){
+                        if (w === playerStat.name) {
                             playerStat.wins++;
                             playerStat.teamPoints += winnerPoints;
                         }
                     });
 
                     _.each(losers, l => {
-                        if (l === playerStat.name){
+                        if (l === playerStat.name) {
                             playerStat.losses++;
                             playerStat.teamPoints += loserPoints;
                         }
                     });
 
                     _.each(tiers, t => {
-                        if (t === playerStat.name){
+                        if (t === playerStat.name) {
                             playerStat.teamPoints += tierPoints;
                         }
                     });
                 }
             });
-        } 
+        }
 
         private playerStatsSort(a: PlayerStats, b: PlayerStats): number {
             if (a.wins === b.wins) {
@@ -138,30 +138,30 @@ module app.controllers {
             }
         }
 
-        private calcMVP(gameDays: GameDay[]): void{
+        private calcMVP(gameDays: GameDay[]): void {
             _.each(gameDays, gd => {
-                if(gd.playerStats.length > 1){
+                if (gd.playerStats.length > 1) {
                     if (gd.playerStats[0].wins !== gd.playerStats[1].wins ||
                         gd.playerStats[0].teamPoints !== gd.playerStats[1].teamPoints) {
                         gd.playerStats[0].isMVP = true;
-                    }                    
+                    }
                 }
             });
         }
 
-        private calcLVP(gameDays: GameDay[]): void{
+        private calcLVP(gameDays: GameDay[]): void {
             _.each(gameDays, gd => {
                 var l = gd.playerStats.length;
-                if(gd.playerStats.length > l){
+                if (gd.playerStats.length > l) {
                     if (gd.playerStats[l - 1].wins !== gd.playerStats[l - 2].wins ||
                         gd.playerStats[l - 1].teamPoints !== gd.playerStats[l - 2].teamPoints) {
                         gd.playerStats[l - 1].isLVP = true;
-                    }                             
+                    }
                 }
             });
         }
     }
 
     angular.module('footballClub')
-           .controller(StatsController.controllerID, StatsController);
+        .controller(StatsController.controllerID, StatsController);
 }

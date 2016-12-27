@@ -3,19 +3,18 @@
 /// <reference path="../services/player.factory.ts"/>
 
 
-module app.controllers
-{
-    export interface IPlayersController{
+module app.controllers {
+    export interface IPlayersController {
         playerToAdd: Player;
         players: Player[];
         addPlayer: () => void;
         deletePlayer: (idx: number) => void;
         toggleQB: (idx: number) => void;
-        refresh:() => void;
+        refresh: () => void;
     }
 
-    export class PlayersController implements IPlayersController{
-        
+    export class PlayersController implements IPlayersController {
+
         static controllerID = 'playersController';
         static $inject = ['playerFactory'];
 
@@ -40,7 +39,7 @@ module app.controllers
             this.refresh();
         }
 
-        toggleQB(idx: number): void{
+        toggleQB(idx: number): void {
             this.playerFactory.toggleQB(idx);
             this.refresh();
         }
@@ -52,5 +51,5 @@ module app.controllers
     }
 
     angular.module('footballClub')
-           .controller(PlayersController.controllerID, PlayersController);
+        .controller(PlayersController.controllerID, PlayersController);
 }

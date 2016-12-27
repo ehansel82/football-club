@@ -76,6 +76,6 @@ module app.controllers {
         }
     }
     angular.module('footballClub')
-           .controller(GameController.controllerID, GameController);
+        .controller(GameController.controllerID, GameController);
 
 }
